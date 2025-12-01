@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cerebral Souvenirs</title>
     
-    <!-- CHANGE THIS: Font import - replace 'Shantell Sans' with any Google Font name -->
-    <link href="https://fonts.googleapis.com/css2?family=Shantell+Sans:ital,wght@1,500&display=swap" rel="stylesheet">
+    <!-- Font import - 'Special Elite' from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
     
-    <!-- Google Material Icons for the Read More icon -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Google Material Icons for the Change Circle Outlined icon -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     
     <style>
         * {
@@ -19,64 +19,57 @@
         }
         
         body {
-            /* CHANGE THIS: Background color */
             background-color: #1a1a1a;
-            
-            /* CHANGE THIS: Text color */
             color: #b8b8b8;
-            
-            /* CHANGE THIS: Font family */
-            font-family: 'Shantell Sans', cursive;
-            
+            font-family: 'Special Elite', cursive, monospace, sans-serif;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            font-size: 1.65rem;
         }
         
         .quote-container {
-            max-width: 800px;
+            max-width: 900px;
             width: 100%;
             text-align: center;
-            padding: 40px;
+            padding: 60px;
         }
         
         .quote {
-            /* Font size will be set dynamically by JavaScript */
-            line-height: 1.6;
-            margin-bottom: 30px;
-            /* This helps balance line lengths */
+            line-height: 1.8;
+            margin-bottom: 40px;
             text-wrap: balance;
-            max-width: 800px;
+            max-width: 900px;
         }
         
         .refresh-btn {
-            /* Invisible button - just the icon */
             background: none;
             border: none;
             color: #b8b8b8;
             cursor: pointer;
             padding: 0;
             transition: all 0.3s ease;
-            
-            /* Make it big enough for mobile */
-            font-size: 48px;
+            font-size: 68px;
         }
         
         .refresh-btn:hover {
             color: #d8d8d8;
-            transform: scale(1.1);
+            transform: scale(1.12);
         }
         
         .refresh-btn:active {
-            transform: scale(0.95);
+            transform: scale(0.98);
         }
         
         /* Mobile responsiveness */
         @media (max-width: 768px) {
+            body {
+                font-size: 1.05rem;
+            }
             .quote-container {
-                padding: 20px;
+                padding: 28px;
             }
         }
     </style>
@@ -85,7 +78,7 @@
     <div class="quote-container">
         <div class="quote" id="quote-display"></div>
         <button class="refresh-btn" onclick="displayRandomQuote()" aria-label="Get another quote">
-            <span class="material-icons">read_more</span>
+            <span class="material-icons-outlined">change_circle</span>
         </button>
     </div>
 
@@ -95,18 +88,18 @@
     "God wiped snot out of his nose and that was you.",
     "He felt that his whole life was some kind of dream and he sometimes wondered whose it was and whether they were enjoying it.",
     "Even a zombie lurching through the night can seem pretty cheerful compared to the existential comedy/horror of the ozone layer dissolving under the combined assault of a million fluorocarbons.",
-    "For instance, on the planet Earth, man had always assumed that he was more intelligent than dolphins because he had achieved so much—the wheel, New York, wars and so on—whilst all the dolphins had ever done was muck about in the water having a good time.",
-    "This planet has - or rather had - a problem, which was this: most of the people living on it were unhappy for pretty much of the time. Many solutions were suggested for this problem, but most of these were largely concerned with the movements of small green pieces of paper, which is odd because on the whole it wasn't the small green pieces of paper that were unhappy.",
+    "For instance, on the planet Earth, man had always assumed that he was more intelligent than dolphins because he had achieved so much—the wheel, New York, wars and so on—whilst all the dolphin[...]",
+    "This planet has - or rather had - a problem, which was this: most of the people living on it were unhappy for pretty much of the time. Many solutions were suggested for this problem, but most of [...]",
     "Anyone who is capable of getting themselves made President should on no account be allowed to do the job.",
     "Sorrow for a wrong was better than nothing, but no amount of after-the-fact sorrow could ever atone for joy taken in destruction.",
     "A cowardly leader is the most dangerous of men.",
     "Life turns on a dime. Sometimes towards us, but more often it spins away, flirting and flashing as it goes: so long, honey, it was good while it lasted, wasn’t it?",
-    "You know how it's going to end, but instead of spoiling things, that somehow increases your fascination. It's like watching a kid run his electric train faster and faster and waiting for it to derail.",
+    "You know how it's going to end, but instead of spoiling things, that somehow increases your fascination. It's like watching a kid run his electric train faster and faster and waiting for it to de[...]",
     "The trouble with Jim was he looked at the world and could not look away. And when you never look away all your life, by the time you are thirteen you have done twenty years taking in the world.",
     "Oh God, midnight’s not bad, you wake and go back to sleep, one or two’s not bad, you toss but sleep again. Five or six in the morning, there’s hope, for dawn’s just under the horizon.",
     "They whispered to Caesar that he was mortal, then sold daggers at half-price in the grand March sale.",
     "There are still faint glimmers of civilization left in this barbaric slaughterhouse that was once known as humanity... He was one of them. What more is there to say?",
-    "In my loneliness, and perhaps because of it, I've learned not to judge people, to take people as I find them, not as others find them. And most of all, to give complete and unquestioning friendship to the one I meet.",
+    "In my loneliness, and perhaps because of it, I've learned not to judge people, to take people as I find them, not as others find them. And most of all, to give complete and unquestioning friendsh[...]",
     "Explanations are such cheap poetry."
 ];
 
@@ -121,20 +114,20 @@
             const wordCount = selectedQuote.split(' ').length;
             let fontSize;
             
-            // CUSTOMIZE THESE: Adjust the font size ranges
+            // Adjust font sizes: all larger than before
             if (wordCount <= 15) {
-                fontSize = '2.2rem';  // Short quotes: large
+                fontSize = '3.2rem';  // Short quotes: extra large
             } else if (wordCount <= 30) {
-                fontSize = '1.8rem';  // Medium quotes
+                fontSize = '2.4rem';  // Medium quotes: large
             } else if (wordCount <= 50) {
-                fontSize = '1.5rem';  // Long quotes
+                fontSize = '2.0rem';  // Long quotes: medium-large
             } else {
-                fontSize = '1.2rem';  // Very long quotes: small
+                fontSize = '1.6rem';  // Very long quotes: bigger
             }
             
             // Adjust for mobile screens
             if (window.innerWidth <= 768) {
-                fontSize = parseFloat(fontSize) * 0.75 + 'rem';
+                fontSize = parseFloat(fontSize) * 0.85 + 'rem';
             }
             
             quoteElement.style.fontSize = fontSize;
