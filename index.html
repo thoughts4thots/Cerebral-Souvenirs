@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Book Quotes</title>
+    
+    <!-- CHANGE THIS: Font import - replace 'Shantell Sans' with any Google Font name -->
+    <link href="https://fonts.googleapis.com/css2?family=Shantell+Sans:ital,wght@1,500&display=swap" rel="stylesheet">
+    
+    <!-- Google Material Icons for the Read More icon -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            /* CHANGE THIS: Background color */
+            background-color: #1a1a1a;
+            
+            /* CHANGE THIS: Text color */
+            color: #b8b8b8;
+            
+            /* CHANGE THIS: Font family */
+            font-family: 'Shantell Sans', cursive;
+            
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .quote-container {
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .quote {
+            /* Font size will be set dynamically by JavaScript */
+            line-height: 1.6;
+            margin-bottom: 30px;
+            /* This helps balance line lengths */
+            text-wrap: balance;
+            max-width: 800px;
+        }
+        
+        .refresh-btn {
+            /* Invisible button - just the icon */
+            background: none;
+            border: none;
+            color: #b8b8b8;
+            cursor: pointer;
+            padding: 0;
+            transition: all 0.3s ease;
+            
+            /* Make it big enough for mobile */
+            font-size: 48px;
+        }
+        
+        .refresh-btn:hover {
+            color: #d8d8d8;
+            transform: scale(1.1);
+        }
+        
+        .refresh-btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .quote-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="quote-container">
+        <div class="quote" id="quote-display"></div>
+        <button class="refresh-btn" onclick="displayRandomQuote()" aria-label="Get another quote">
+            <span class="material-icons">read_more</span>
+        </button>
+    </div>
+
+    <script>
+        // ADD YOUR QUOTES HERE - Just add more lines following the same format
+        const quotes = [
+            "God wiped snot out of his nose and that was you.",
+            "He felt that his whole life was some kind of dream and he sometimes wondered whose it was and whether they were enjoying it.",
+            "Even a zombie lurching through the night can seem pretty cheerful compared to the existential comedy/horror of the ozone layer dissolving under the combined assault of a million fluorocarbon spray cans of deodorant.",
+            "Add your next quote here.",
+            "And another one here.",
+            "Keep adding as many as you want."
+        ];
+
+        function displayRandomQuote() {
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            const selectedQuote = quotes[randomIndex];
+            const quoteElement = document.getElementById('quote-display');
+            
+            quoteElement.textContent = '"' + selectedQuote + '"';
+            
+            // Calculate font size based on quote length
+            const wordCount = selectedQuote.split(' ').length;
+            let fontSize;
+            
+            // CUSTOMIZE THESE: Adjust the font size ranges
+            if (wordCount <= 15) {
+                fontSize = '2.2rem';  // Short quotes: large
+            } else if (wordCount <= 30) {
+                fontSize = '1.8rem';  // Medium quotes
+            } else if (wordCount <= 50) {
+                fontSize = '1.5rem';  // Long quotes
+            } else {
+                fontSize = '1.2rem';  // Very long quotes: small
+            }
+            
+            // Adjust for mobile screens
+            if (window.innerWidth <= 768) {
+                fontSize = parseFloat(fontSize) * 0.75 + 'rem';
+            }
+            
+            quoteElement.style.fontSize = fontSize;
+        }
+
+        // Display a random quote when the page loads
+        displayRandomQuote();
+    </script>
+</body>
+</html>
