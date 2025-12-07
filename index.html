@@ -21,6 +21,21 @@
         
         body {
             background-color: #1a1a1a;
+            background-image: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 255, 255, 0.015) 2px,
+                    rgba(255, 255, 255, 0.015) 4px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 255, 255, 0.015) 2px,
+                    rgba(255, 255, 255, 0.015) 4px
+                );
             color: #b8b8b8;
             font-family: 'Poetsen One', sans-serif;
             min-height: 100vh;
@@ -43,6 +58,11 @@
             margin-bottom: 40px;
             text-wrap: balance;
             max-width: 1000px;
+            transition: opacity 0.5s ease-in-out;
+        }
+        
+        .quote.fade-out {
+            opacity: 0;
         }
         
          .refresh-btn {
@@ -135,38 +155,45 @@
     }
 
     function displayRandomQuote() {
-        // If queue is empty, reshuffle
-        if (currentIndex >= shuffledQuotes.length) {
-            shuffledQuotes = shuffleArray(quotes);
-            currentIndex = 0;
-            cycles++;
-        }
-
-        const selectedQuote = shuffledQuotes[currentIndex];
-        currentIndex++;
-
         const quoteElement = document.getElementById('quote-display');
-        quoteElement.textContent = '"' + selectedQuote + '"';
+        
+        // Fade out
+        quoteElement.classList.add('fade-out');
+        
+        // Wait for fade out, then change quote and fade in
+        setTimeout(() => {
+            // If queue is empty, reshuffle
+            if (currentIndex >= shuffledQuotes.length) {
+                shuffledQuotes = shuffleArray(quotes);
+                currentIndex = 0;
+                cycles++;
+            }
 
-        // Font size logic
-        const wordCount = selectedQuote.split(' ').length;
-        let fontSize;
-        if (wordCount <= 15) {
-            fontSize = '3.8rem';
-        } else if (wordCount <= 30) {
-            fontSize = '2.8rem';
-        } else if (wordCount <= 50) {
-            fontSize = '2.3rem';
-        } else {
-            fontSize = '1.9rem';
-        }
-        if (window.innerWidth <= 768) {
-            fontSize = parseFloat(fontSize) * 0.95 + 'rem';
-        }
-        quoteElement.style.fontSize = fontSize;
+            const selectedQuote = shuffledQuotes[currentIndex];
+            currentIndex++;
 
-        // Optionally, display the cycle number somewhere if you want
-        // e.g. document.getElementById('cycle-display').textContent = `Cycle: ${cycles + 1}`;
+            quoteElement.textContent = '"' + selectedQuote + '"';
+
+            // Font size logic
+            const wordCount = selectedQuote.split(' ').length;
+            let fontSize;
+            if (wordCount <= 15) {
+                fontSize = '3.8rem';
+            } else if (wordCount <= 30) {
+                fontSize = '2.8rem';
+            } else if (wordCount <= 50) {
+                fontSize = '2.3rem';
+            } else {
+                fontSize = '1.9rem';
+            }
+            if (window.innerWidth <= 768) {
+                fontSize = parseFloat(fontSize) * 0.95 + 'rem';
+            }
+            quoteElement.style.fontSize = fontSize;
+            
+            // Fade in
+            quoteElement.classList.remove('fade-out');
+        }, 500);
     }
 
     // Initial shuffle for first load
@@ -175,6 +202,15 @@
     cycles = 0;
 
     displayRandomQuote();
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', (event) => {
+        // Spacebar, Right Arrow, or Enter to advance
+        if (event.code === 'Space' || event.code === 'ArrowRight' || event.code === 'Enter') {
+            event.preventDefault(); // Prevent page scroll on spacebar
+            displayRandomQuote();
+        }
+    });
 </script>
 </body>
 </html>
