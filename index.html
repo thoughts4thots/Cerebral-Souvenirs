@@ -45,24 +45,31 @@
             max-width: 1000px;
         }
         
-        .refresh-btn {
-            background: none;
-            border: none;
-            color: #b8b8b8;
-            cursor: pointer;
-            padding: 0;
-            transition: all 0.3s ease;
-            font-size: 92px;
-        }
-        
-        .refresh-btn:hover {
-            color: #d8d8d8;
-            transform: scale(1.12);
-        }
-        
-        .refresh-btn:active {
-            transform: scale(0.98);
-        }
+         .refresh-btn {
+        background: none;
+        border: none;
+        color: #b8b8b8;
+        cursor: pointer;
+        padding: 0;
+        transition: all 0.3s ease;
+        font-size: 92px; 
+        line-height: 1;
+    }
+
+    /* Ensure the icon itself uses the same size and stays crisp */
+    .refresh-btn .material-icons-round {
+        font-size: 1em;
+        vertical-align: middle;
+    }
+    
+    .refresh-btn:hover {
+        color: #d8d8d8;
+        transform: scale(1.08);
+    }
+    
+    .refresh-btn:active {
+        transform: scale(0.98);
+    }
         
         /* Mobile responsiveness */
         @media (max-width: 768px) {
