@@ -111,38 +111,61 @@
     "Like so many Americans, she was trying to construct a life that made sense from things she found in gift shops."
 ];
 
-        function displayRandomQuote() {
-            const randomIndex = Math.floor(Math.random() * quotes.length);
-            const selectedQuote = quotes[randomIndex];
-            const quoteElement = document.getElementById('quote-display');
-            
-            quoteElement.textContent = '"' + selectedQuote + '"';
-            
-            // Calculate font size based on quote length
-            const wordCount = selectedQuote.split(' ').length;
-            let fontSize;
-            
-            // Adjust font sizes: all larger than before
-            if (wordCount <= 15) {
-                fontSize = '3.2rem';  // Short quotes: extra large
-            } else if (wordCount <= 30) {
-                fontSize = '2.4rem';  // Medium quotes: large
-            } else if (wordCount <= 50) {
-                fontSize = '2.0rem';  // Long quotes: medium-large
-            } else {
-                fontSize = '1.6rem';  // Very long quotes: bigger
-            }
-            
-            // Adjust for mobile screens
-            if (window.innerWidth <= 768) {
-                fontSize = parseFloat(fontSize) * 0.85 + 'rem';
-            }
-            
-            quoteElement.style.fontSize = fontSize;
+    let shuffledQuotes = [];
+    let currentIndex = 0;
+    let cycles = 0; // Tracks how many times all quotes have been shown
+
+    // Fisher-Yates shuffle
+    function shuffleArray(array) {
+        const arr = array.slice();
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function displayRandomQuote() {
+        // If queue is empty, reshuffle
+        if (currentIndex >= shuffledQuotes.length) {
+            shuffledQuotes = shuffleArray(quotes);
+            currentIndex = 0;
+            cycles++;
         }
 
-        // Display a random quote when the page loads
-        displayRandomQuote();
-    </script>
+        const selectedQuote = shuffledQuotes[currentIndex];
+        currentIndex++;
+
+        const quoteElement = document.getElementById('quote-display');
+        quoteElement.textContent = '"' + selectedQuote + '"';
+
+        // Font size logic
+        const wordCount = selectedQuote.split(' ').length;
+        let fontSize;
+        if (wordCount <= 15) {
+            fontSize = '3.2rem';
+        } else if (wordCount <= 30) {
+            fontSize = '2.4rem';
+        } else if (wordCount <= 50) {
+            fontSize = '2.0rem';
+        } else {
+            fontSize = '1.6rem';
+        }
+        if (window.innerWidth <= 768) {
+            fontSize = parseFloat(fontSize) * 0.85 + 'rem';
+        }
+        quoteElement.style.fontSize = fontSize;
+
+        // Optionally, display the cycle number somewhere if you want
+        // e.g. document.getElementById('cycle-display').textContent = `Cycle: ${cycles + 1}`;
+    }
+
+    // Initial shuffle for first load
+    shuffledQuotes = shuffleArray(quotes);
+    currentIndex = 0;
+    cycles = 0;
+
+    displayRandomQuote();
+</script>
 </body>
 </html>
