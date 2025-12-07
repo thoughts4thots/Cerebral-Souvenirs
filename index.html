@@ -51,6 +51,9 @@
             width: 100%;
             text-align: center;
             padding: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         
         .quote {
@@ -58,38 +61,72 @@
             margin-bottom: 40px;
             text-wrap: balance;
             max-width: 1000px;
-            transition: opacity 0.5s ease-in-out;
+            transition: opacity 0.5s ease-in-out, font-size 0.3s ease;
         }
         
         .quote.fade-out {
             opacity: 0;
         }
         
-         .refresh-btn {
-        background: none;
-        border: none;
-        color: #b8b8b8;
-        cursor: pointer;
-        padding: 0;
-        transition: all 0.3s ease;
-        font-size: 72px; 
-        line-height: 1;
-    }
+        .refresh-btn {
+            background: none;
+            border: none;
+            color: #b8b8b8;
+            cursor: pointer;
+            padding: 0;
+            transition: all 0.3s ease;
+            font-size: 72px; 
+            line-height: 1;
+        }
 
-    /* Ensure the icon itself uses the same size and stays crisp */
-    .refresh-btn .material-icons-round {
-        font-size: 1em;
-        vertical-align: middle;
-    }
-    
-    .refresh-btn:hover {
-        color: #d8d8d8;
-        transform: scale(1.08);
-    }
-    
-    .refresh-btn:active {
-        transform: scale(0.98);
-    }
+        /* Ensure the icon itself uses the same size and stays crisp */
+        .refresh-btn .material-icons-round {
+            font-size: 1em;
+            vertical-align: middle;
+        }
+        
+        .refresh-btn:hover {
+            color: #d8d8d8;
+            transform: scale(1.08);
+        }
+        
+        .refresh-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .font-controls {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .font-btn {
+            background: none;
+            border: none;
+            color: #b8b8b8;
+            cursor: pointer;
+            padding: 0;
+            transition: all 0.3s ease;
+            font-size: 56px;
+            line-height: 1;
+            opacity: 0.4;
+        }
+        
+        .font-btn .material-icons-round {
+            font-size: 1em;
+            vertical-align: middle;
+        }
+        
+        .font-btn:hover {
+            color: #d8d8d8;
+            transform: scale(1.08);
+            opacity: 1;
+        }
+        
+        .font-btn:active {
+            transform: scale(0.98);
+        }
         
         /* Mobile responsiveness */
         @media (max-width: 768px) {
@@ -98,6 +135,9 @@
             }
             .quote-container {
                 padding: 32px;
+            }
+            .font-btn {
+                font-size: 48px;
             }
         }
     </style>
@@ -108,6 +148,14 @@
         <button class="refresh-btn" onclick="displayRandomQuote()" aria-label="Get another quote">
             <span class="material-icons-round">refresh</span>
         </button>
+        <div class="font-controls">
+            <button class="font-btn" onclick="decreaseFontSize()" aria-label="Decrease font size">
+                <span class="material-icons-round">text_decrease</span>
+            </button>
+            <button class="font-btn" onclick="increaseFontSize()" aria-label="Increase font size">
+                <span class="material-icons-round">text_increase</span>
+            </button>
+        </div>
     </div>
 
     <script>
@@ -143,6 +191,7 @@
     let shuffledQuotes = [];
     let currentIndex = 0;
     let cycles = 0; // Tracks how many times all quotes have been shown
+    let fontSizeAdjustment = 0; // Tracks user's font size preference
 
     // Fisher-Yates shuffle
     function shuffleArray(array) {
@@ -187,8 +236,11 @@
                 fontSize = '1.9rem';
             }
             if (window.innerWidth <= 768) {
-                fontSize = parseFloat(fontSize) * 0.95 + 'rem';
+                fontSize = parseFloat(fontSize) * 0.85 + 'rem';
             }
+            
+            // Apply user's font size adjustment
+            fontSize = parseFloat(fontSize) + fontSizeAdjustment + 'rem';
             quoteElement.style.fontSize = fontSize;
             
             // Fade in
@@ -211,6 +263,21 @@
             displayRandomQuote();
         }
     });
+    
+    // Font size adjustment functions
+    function increaseFontSize() {
+        fontSizeAdjustment += 0.2;
+        const quoteElement = document.getElementById('quote-display');
+        const currentSize = parseFloat(quoteElement.style.fontSize);
+        quoteElement.style.fontSize = (currentSize + 0.2) + 'rem';
+    }
+    
+    function decreaseFontSize() {
+        fontSizeAdjustment -= 0.2;
+        const quoteElement = document.getElementById('quote-display');
+        const currentSize = parseFloat(quoteElement.style.fontSize);
+        quoteElement.style.fontSize = (currentSize - 0.2) + 'rem';
+    }
 </script>
 </body>
 </html>
