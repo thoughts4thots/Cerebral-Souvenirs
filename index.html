@@ -8,11 +8,23 @@
     <!-- Font import - 'Poetsen One' from Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poetsen+One&display=swap" rel="stylesheet">
     
-    <!-- Google Material Rounded Icons for the Refresh icon -->
+    <!-- Google Material Rounded Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 
     
     <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --text-color: #b8b8b8;
+            --text-hover: #d8d8d8;
+        }
+        
+        body.light-mode {
+            --bg-color: #b8b8b8;
+            --text-color: #1a1a1a;
+            --text-hover: #000000;
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -20,23 +32,8 @@
         }
         
         body {
-            background-color: #1a1a1a;
-            background-image: 
-                repeating-linear-gradient(
-                    0deg,
-                    transparent,
-                    transparent 2px,
-                    rgba(255, 255, 255, 0.015) 2px,
-                    rgba(255, 255, 255, 0.015) 4px
-                ),
-                repeating-linear-gradient(
-                    90deg,
-                    transparent,
-                    transparent 2px,
-                    rgba(255, 255, 255, 0.015) 2px,
-                    rgba(255, 255, 255, 0.015) 4px
-                );
-            color: #b8b8b8;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             font-family: 'Poetsen One', sans-serif;
             min-height: 100vh;
             display: flex;
@@ -44,6 +41,7 @@
             align-items: center;
             padding: 20px;
             font-size: 1.65rem;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         
         .quote-container {
@@ -58,10 +56,10 @@
         
         .quote {
             line-height: 1.8;
-            margin-bottom: 40px;
+            margin-bottom: 120px;
             text-wrap: balance;
             max-width: 1000px;
-            transition: opacity 0.5s ease-in-out, font-size 0.3s ease;
+            transition: opacity 0.5s ease-in-out;
         }
         
         .quote.fade-out {
@@ -71,22 +69,22 @@
         .refresh-btn {
             background: none;
             border: none;
-            color: #b8b8b8;
+            color: var(--text-color);
             cursor: pointer;
             padding: 0;
             transition: all 0.3s ease;
             font-size: 72px; 
             line-height: 1;
+            margin-bottom: 60px;
         }
 
-        /* Ensure the icon itself uses the same size and stays crisp */
         .refresh-btn .material-icons-round {
             font-size: 1em;
             vertical-align: middle;
         }
         
         .refresh-btn:hover {
-            color: #d8d8d8;
+            color: var(--text-hover);
             transform: scale(1.08);
         }
         
@@ -94,17 +92,69 @@
             transform: scale(0.98);
         }
         
-        .font-controls {
+        .controls-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+        
+        .settings-btn {
+            background: transparent;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            color: var(--text-color);
+            cursor: pointer;
+            padding: 8px;
+            transition: all 0.3s ease;
+            font-size: 56px;
+            line-height: 1;
+            opacity: 0.4;
+        }
+        
+        .settings-btn.active {
+            background-color: var(--text-color);
+            color: var(--bg-color);
+            opacity: 1;
+        }
+        
+        .settings-btn .material-icons-round {
+            font-size: 1em;
+            vertical-align: middle;
+        }
+        
+        .settings-btn:hover {
+            color: var(--text-hover);
+            opacity: 1;
+        }
+        
+        .settings-btn:not(.active):hover {
+            transform: scale(1.08);
+        }
+        
+        .settings-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .controls {
             display: flex;
             gap: 40px;
             justify-content: center;
-            margin-top: 20px;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
         }
         
-        .font-btn {
+        .controls.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .control-btn {
             background: none;
             border: none;
-            color: #b8b8b8;
+            color: var(--text-color);
             cursor: pointer;
             padding: 0;
             transition: all 0.3s ease;
@@ -113,18 +163,18 @@
             opacity: 0.4;
         }
         
-        .font-btn .material-icons-round {
+        .control-btn .material-icons-round {
             font-size: 1em;
             vertical-align: middle;
         }
         
-        .font-btn:hover {
-            color: #d8d8d8;
+        .control-btn:hover {
+            color: var(--text-hover);
             transform: scale(1.08);
             opacity: 1;
         }
         
-        .font-btn:active {
+        .control-btn:active {
             transform: scale(0.98);
         }
         
@@ -136,7 +186,16 @@
             .quote-container {
                 padding: 32px;
             }
-            .font-btn {
+            .quote {
+                margin-bottom: 60px;
+            }
+            .refresh-btn {
+                margin-bottom: 40px;
+            }
+            .settings-btn {
+                font-size: 48px;
+            }
+            .control-btn {
                 font-size: 48px;
             }
         }
@@ -148,136 +207,185 @@
         <button class="refresh-btn" onclick="displayRandomQuote()" aria-label="Get another quote">
             <span class="material-icons-round">refresh</span>
         </button>
-        <div class="font-controls">
-            <button class="font-btn" onclick="decreaseFontSize()" aria-label="Decrease font size">
-                <span class="material-icons-round">text_decrease</span>
+        <div class="controls-container">
+            <button class="settings-btn" onclick="toggleSettings()" aria-label="Toggle settings" id="settings-btn">
+                <span class="material-icons-round">settings</span>
             </button>
-            <button class="font-btn" onclick="increaseFontSize()" aria-label="Increase font size">
-                <span class="material-icons-round">text_increase</span>
-            </button>
+            <div class="controls" id="controls">
+                <button class="control-btn" onclick="decreaseFontSize()" aria-label="Decrease font size">
+                    <span class="material-icons-round">text_decrease</span>
+                </button>
+                <button class="control-btn" onclick="increaseFontSize()" aria-label="Increase font size">
+                    <span class="material-icons-round">text_increase</span>
+                </button>
+                <button class="control-btn" onclick="toggleTheme()" aria-label="Toggle light/dark mode" id="theme-toggle">
+                    <span class="material-icons-round">light_mode</span>
+                </button>
+            </div>
         </div>
     </div>
 
     <script>
-        // ADD YOUR QUOTES HERE - Just add more lines following the same format
         const quotes = [
-    "God wiped snot out of his nose and that was you.",
-    "He felt that his whole life was some kind of dream and he sometimes wondered whose it was and whether they were enjoying it.",
-    "Even a zombie lurching through the night can seem pretty cheerful compared to the existential comedy/horror of the ozone layer dissolving under the combined assault of a million fluorocarbon spray cans of deodorant.",
-    "For instance, on the planet Earth, man had always assumed that he was more intelligent than dolphins because he had achieved so much—the wheel, New York, wars and so on—whilst all the dolphins had ever done was muck about in the water having a good time. But conversely, the dolphins had always believed that they were far more intelligent than man—for precisely the same reasons.",
-    "This planet has - or rather had - a problem, which was this: most of the people living on it were unhappy for pretty much of the time. Many solutions were suggested for this problem, but most of these were largely concerned with the movement of small green pieces of paper, which was odd because on the whole it wasn't the small green pieces of paper that were unhappy.",
-    "Anyone who is capable of getting themselves made President should on no account be allowed to do the job.",
-    "Sorrow for a wrong was better than nothing, but no amount of after-the-fact sorrow could ever atone for joy taken in destruction.",
-    "Two can keep a secret if one of them is dead.",
-    "A cowardly leader is the most dangerous of men.",
-    "Anyone who is capable of getting themselves made President should on no account be allowed to do the job.",
-    "Life turns on a dime. Sometimes towards us, but more often it spins away, flirting and flashing as it goes: so long, honey, it was good while it lasted, wasn't it?",
-    "You know how it's going to end, but instead of spoiling things, that somehow increases your fascination. It's like watching a kid run his electric train faster and faster and waiting for it to derail on one of the curves.",
-    "The trouble with Jim was he looked at the world and could not look away. And when you never look away all your life, by the time you are thirteen you have done twenty years taking in the world.",
-    "They whispered to Caesar that he was mortal, then sold daggers at half-price in the grand March sale.",
-    "There are still faint glimmers of civilization left in this barbaric slaughterhouse that was once known as humanity... He was one of them. What more is there to say?",
-    "My name is Ozymandias, King of Kings; Look on my Works, ye Mighty, and despair!",
-    "In my loneliness, and perhaps because of it, I've learned not to judge people, to take people as I find them, not as others find them. And most of all, to give complete and unquestioning faith to the people I love.",
-    "Explanations are such cheap poetry.",
-    "Stupidity is one of the two things we see most clearly in retrospect. The other is missed chances.",
-    "For a moment everything was clear, and when that happens, you see that the world is barely there at all. Don't we all secretly know this? It's a perfectly balanced mechanism of shouts and echoes, pretending to be wheels and cogs. A dream clock chiming beneath a mystery-glass we call life. Behind it? Below it and around it? Chaos, storms. Men with hammers, men with knives, men with guns. Women who twist what they cannot dominate, and belittle what they cannot understand. A universe of horror and loss surrounding a single lighted stage where mortals dance in defiance of the dark.",
-    "For some, autumn comes early, stays late through life where October follows September and November touches October and then instead of December and Christ's birth, there is no Bethlehem Star, no rejoicing, but September comes again and old October and so on down the years, with no winter, spring, or revivifying summer. For these beings, fall is the ever normal season, the only weather, there be no choice beyond. Where do they come from? The dust. Where do they go? The grave. Does blood stir their veins? No: the night wind. What ticks in their head? The worm. What speaks from their mouth? The toad. What sees from their eye? The snake. What hears with their ear? The abyss between the stars. They sift the human storm for souls, eat flesh of reason, fill tombs with sinners. They frenzy forth. In gusts they beetle-scurry, creep, thread, filter, motion, make all moons sullen, and surely cloud all clear-run waters. The spider-web hears them, trembles—breaks. Such are the autumn people. Beware of them.",
-    "Oh God, midnight's not bad, you wake and go back to sleep, one or two's not bad, you toss but sleep again. Five or six in the morning, there's hope, for dawn's just under the horizon. But three, now, Christ, three A.M.! Doctors say the body's at low tide then. The soul is out. The blood moves slow. You're the nearest to dead you'll ever be save dying. Sleep is a patch of death, but three in the morn, full wide-eyed staring, is living death! You dream with your eyes open. God, if you had strength to rouse up, you'd slaughter your half-dreams with buckshot! But no, you lie pinned to a deep well-bottom that's burned dry. The moon rolls by to look at you down there, with its idiot face. It's a long way back to sunset, a far way on to dawn, so you summon all the fool things of your life, the stupid lovely things done with people known so very well who are now so very dead — And wasn't it true, had he read somewhere, more people in hospitals die at 3 A.M. than at any other time...",
-    "Do you know how cruel your God can be, David. How fantastically cruel? Sometimes he makes us live.",
-    "Like so many Americans, she was trying to construct a life that made sense from things she found in gift shops.",
-    "Romance is dead. It was acquired in a hostile takeover by Hallmark and Disney, homogenized, and sold off, piece by piece."
-];
+            "God wiped snot out of his nose and that was you.",
+            "He felt that his whole life was some kind of dream and he sometimes wondered whose it was and whether they were enjoying it.",
+            "Even a zombie lurching through the night can seem pretty cheerful compared to the existential comedy/horror of the ozone layer dissolving under the combined assault of a million fluorocarbon spray cans of deodorant.",
+            "For instance, on the planet Earth, man had always assumed that he was more intelligent than dolphins because he had achieved so much—the wheel, New York, wars and so on—whilst all the dolphins had ever done was muck about in the water having a good time. But conversely, the dolphins had always believed that they were far more intelligent than man—for precisely the same reasons.",
+            "This planet has - or rather had - a problem, which was this: most of the people living on it were unhappy for pretty much of the time. Many solutions were suggested for this problem, but most of these were largely concerned with the movement of small green pieces of paper, which was odd because on the whole it wasn't the small green pieces of paper that were unhappy.",
+            "Anyone who is capable of getting themselves made President should on no account be allowed to do the job.",
+            "Sorrow for a wrong was better than nothing, but no amount of after-the-fact sorrow could ever atone for joy taken in destruction.",
+            "Two can keep a secret if one of them is dead.",
+            "A cowardly leader is the most dangerous of men.",
+            "Life turns on a dime. Sometimes towards us, but more often it spins away, flirting and flashing as it goes: so long, honey, it was good while it lasted, wasn't it?",
+            "You know how it's going to end, but instead of spoiling things, that somehow increases your fascination. It's like watching a kid run his electric train faster and faster and waiting for it to derail on one of the curves.",
+            "The trouble with Jim was he looked at the world and could not look away. And when you never look away all your life, by the time you are thirteen you have done twenty years taking in the laundry of the world.",
+            "They whispered to Caesar that he was mortal, then sold daggers at half-price in the grand March sale.",
+            "There are still faint glimmers of civilization left in this barbaric slaughterhouse that was once known as humanity... He was one of them. What more is there to say?",
+            "My name is Ozymandias, King of Kings; Look on my Works, ye Mighty, and despair!"
+            "Explanations are such cheap poetry.",
+            "Let us go then, you and I, while the evening is spread out against the sky like a patient etherized upon a table.",
+            "He had thought her conversation seemed like a careless spray of diamonds on the green felt of a billiard table. Since yesterday afternoon it had seemed more like the glitter of zircons, near-perfect pastes that were, after all, only pastes.",
+            "History doesn't repeat itself, but it harmonizes, and what it usually makes is the devil's music.",
+            "Women are better at keeping secrets, but men are more comfortable with them.",
+            "We never know which lives we influence, or when, or why. Not until the future eats the present, anyway. We know when it's too late.",
+            "Sarcastic people tend to be marshmallows underneath the armor.",
+            "Sometimes the things presented to us as choices aren’t choices at all.",
+            "If you were seeing a lot of horseshit, there had to be a pony in the vicinity.",
+            "Stupidity is one of the two things we see most clearly in retrospect. The other is missed chances.",
+            "For a moment everything was clear, and when that happens, you see that the world is barely there at all. Don't we all secretly know this? It's a perfectly balanced mechanism of shouts and echoes, pretending to be wheels and cogs. A dream clock chiming beneath a mystery-glass we call life. Behind it? Below it and around it? Chaos, storms. Men with hammers, men with knives, men with guns. Women who twist what they cannot dominate, and belittle what they cannot understand. A universe of horror and loss surrounding a single lighted stage where mortals dance in defiance of the dark.",
+            "For these beings, fall is the ever normal season, the only weather, there be no choice beyond. Where do they come from? The dust. Where do they go? The grave. Does blood stir their veins? No: the night wind. What ticks in their head? The worm. What speaks from their mouth? The toad. What sees from their eye? The snake. What hears with their ear? The abyss between the stars. They sift the human storm for souls, eat flesh of reason, fill tombs with sinners. They frenzy forth. In gusts they beetle-scurry, creep, thread, filter, motion, make all moons sullen, and surely cloud all clear-run waters. The spider-web hears them, trembles—breaks. Such are the autumn people. Beware of them.",
+            "Oh God, midnight's not bad, you wake and go back to sleep, one or two's not bad, you toss but sleep again. Five or six in the morning, there's hope, for dawn's just under the horizon. But three, now, Christ, three A.M.! Doctors say the body's at low tide then. The soul is out. The blood moves slow. You're the nearest to dead you'll ever be save dying. Sleep is a patch of death, but three in the morn, full wide-eyed staring, is living death! You dream with your eyes open. God, if you had strength to rouse up, you'd slaughter your half-dreams with buckshot! But no, you lie pinned to a deep well-bottom that's burned dry. The moon rolls by to look at you down there, with its idiot face. It's a long way back to sunset, a far way on to dawn, so you summon all the fool things of your life, the stupid lovely things done with people known so very well who are now so very dead — And wasn't it true, had he read somewhere, more people in hospitals die at 3 A.M. than at any other time...",
+            "Do you know how cruel your God can be, David. How fantastically cruel? Sometimes he makes us live.",
+            "Like so many Americans, she was trying to construct a life that made sense from things she found in gift shops.",
+            "Romance is dead. It was acquired in a hostile takeover by Hallmark and Disney, homogenized, and sold off, piece by piece."
+        ];
 
-    let shuffledQuotes = [];
-    let currentIndex = 0;
-    let cycles = 0; // Tracks how many times all quotes have been shown
-    let fontSizeAdjustment = 0; // Tracks user's font size preference
+        let shuffledQuotes = [];
+        let currentIndex = 0;
+        let cycles = 0;
+        let fontSizeAdjustment = 0;
 
-    // Fisher-Yates shuffle
-    function shuffleArray(array) {
-        const arr = array.slice();
-        for (let i = arr.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [arr[i], arr[j]] = [arr[j], arr[i]];
-        }
-        return arr;
-    }
-
-    function displayRandomQuote() {
-        const quoteElement = document.getElementById('quote-display');
-        
-        // Fade out
-        quoteElement.classList.add('fade-out');
-        
-        // Wait for fade out, then change quote and fade in
-        setTimeout(() => {
-            // If queue is empty, reshuffle
-            if (currentIndex >= shuffledQuotes.length) {
-                shuffledQuotes = shuffleArray(quotes);
-                currentIndex = 0;
-                cycles++;
+        // Fisher-Yates shuffle
+        function shuffleArray(array) {
+            const arr = array.slice();
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
             }
+            return arr;
+        }
 
-            const selectedQuote = shuffledQuotes[currentIndex];
-            currentIndex++;
+        function displayRandomQuote() {
+            const quoteElement = document.getElementById('quote-display');
+            
+            quoteElement.classList.add('fade-out');
+            
+            setTimeout(() => {
+                if (currentIndex >= shuffledQuotes.length) {
+                    shuffledQuotes = shuffleArray(quotes);
+                    currentIndex = 0;
+                    cycles++;
+                }
 
-            quoteElement.textContent = '"' + selectedQuote + '"';
+                const selectedQuote = shuffledQuotes[currentIndex];
+                currentIndex++;
 
-            // Font size logic
-            const wordCount = selectedQuote.split(' ').length;
-            let fontSize;
-            if (wordCount <= 15) {
-                fontSize = '3.8rem';
-            } else if (wordCount <= 30) {
-                fontSize = '2.8rem';
-            } else if (wordCount <= 50) {
-                fontSize = '2.3rem';
+                // Calculate and set font size BEFORE removing fade-out
+                const wordCount = selectedQuote.split(' ').length;
+                let fontSize;
+                if (wordCount <= 15) {
+                    fontSize = '3.8rem';
+                } else if (wordCount <= 30) {
+                    fontSize = '2.8rem';
+                } else if (wordCount <= 50) {
+                    fontSize = '2.3rem';
+                } else {
+                    fontSize = '1.9rem';
+                }
+                if (window.innerWidth <= 768) {
+                    fontSize = parseFloat(fontSize) * 0.85 + 'rem';
+                }
+                
+                fontSize = parseFloat(fontSize) + fontSizeAdjustment + 'rem';
+                quoteElement.style.fontSize = fontSize;
+                
+                // Set text content
+                quoteElement.textContent = '"' + selectedQuote + '"';
+                
+                // Small delay to ensure font size is applied before fade-in
+                setTimeout(() => {
+                    quoteElement.classList.remove('fade-out');
+                }, 50);
+            }, 500);
+        }
+
+        // Toggle settings visibility
+        function toggleSettings() {
+            const controls = document.getElementById('controls');
+            const settingsBtn = document.getElementById('settings-btn');
+            controls.classList.toggle('visible');
+            settingsBtn.classList.toggle('active');
+        }
+
+        // Theme toggle
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.getElementById('theme-toggle');
+            const icon = themeToggle.querySelector('.material-icons-round');
+            
+            body.classList.toggle('light-mode');
+            
+            if (body.classList.contains('light-mode')) {
+                icon.textContent = 'dark_mode';
+                localStorage.setItem('theme', 'light');
             } else {
-                fontSize = '1.9rem';
+                icon.textContent = 'light_mode';
+                localStorage.setItem('theme', 'dark');
             }
-            if (window.innerWidth <= 768) {
-                fontSize = parseFloat(fontSize) * 0.85 + 'rem';
-            }
-            
-            // Apply user's font size adjustment
-            fontSize = parseFloat(fontSize) + fontSizeAdjustment + 'rem';
-            quoteElement.style.fontSize = fontSize;
-            
-            // Fade in
-            quoteElement.classList.remove('fade-out');
-        }, 500);
-    }
-
-    // Initial shuffle for first load
-    shuffledQuotes = shuffleArray(quotes);
-    currentIndex = 0;
-    cycles = 0;
-
-    displayRandomQuote();
-    
-    // Keyboard navigation
-    document.addEventListener('keydown', (event) => {
-        // Spacebar, Right Arrow, or Enter to advance
-        if (event.code === 'Space' || event.code === 'ArrowRight' || event.code === 'Enter') {
-            event.preventDefault(); // Prevent page scroll on spacebar
-            displayRandomQuote();
         }
-    });
-    
-    // Font size adjustment functions
-    function increaseFontSize() {
-        fontSizeAdjustment += 0.2;
-        const quoteElement = document.getElementById('quote-display');
-        const currentSize = parseFloat(quoteElement.style.fontSize);
-        quoteElement.style.fontSize = (currentSize + 0.2) + 'rem';
-    }
-    
-    function decreaseFontSize() {
-        fontSizeAdjustment -= 0.2;
-        const quoteElement = document.getElementById('quote-display');
-        const currentSize = parseFloat(quoteElement.style.fontSize);
-        quoteElement.style.fontSize = (currentSize - 0.2) + 'rem';
-    }
-</script>
+
+        // Load saved theme
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const themeToggle = document.getElementById('theme-toggle');
+            const icon = themeToggle.querySelector('.material-icons-round');
+            
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-mode');
+                icon.textContent = 'dark_mode';
+            }
+        }
+
+        // Font size adjustment functions
+        function increaseFontSize() {
+            fontSizeAdjustment += 0.6;
+            const quoteElement = document.getElementById('quote-display');
+            const currentSize = parseFloat(quoteElement.style.fontSize);
+            quoteElement.style.fontSize = (currentSize + 0.6) + 'rem';
+        }
+        
+        function decreaseFontSize() {
+            fontSizeAdjustment -= 0.6;
+            const quoteElement = document.getElementById('quote-display');
+            const currentSize = parseFloat(quoteElement.style.fontSize);
+            quoteElement.style.fontSize = (currentSize - 0.6) + 'rem';
+        }
+
+        // Initialize
+        shuffledQuotes = shuffleArray(quotes);
+        currentIndex = 0;
+        cycles = 0;
+        
+        loadTheme();
+        displayRandomQuote();
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (event) => {
+            if (event.code === 'Space' || event.code === 'ArrowRight' || event.code === 'Enter') {
+                event.preventDefault();
+                displayRandomQuote();
+            }
+        });
+    </script>
 </body>
 </html>
